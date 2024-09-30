@@ -7,12 +7,14 @@ import Grid from '@mui/material/Grid2'
 import IconButton from '@mui/material/IconButton'
 import InputAdornment from '@mui/material/InputAdornment'
 import TextField from '@mui/material/TextField'
-import { useQuery } from '@tanstack/react-query'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import productApi from '../../apis/product.api'
 import FilterDrawer from '../../components/Drawer/FilterDrawer/FilterDrawer'
 import Pagination from '../../components/Pagination/Pagination'
 import ProductCard from '../../components/ProductCard/ProductCard'
+import Skeleton from '@mui/material/Skeleton'
+import Typography from '@mui/material/Typography'
 
 type Props = {}
 
@@ -37,9 +39,10 @@ const HomePage = ( props: Props ) =>
 
     const productsQuery = useQuery( {
         queryKey: [ 'products', { page, search } ],
-        queryFn: () => productApi.getProducts( { page, size: 8, Name: search } )
+        queryFn: () => productApi.getProducts( { page, size: 8, Name: search } ),
+        placeholderData: keepPreviousData
     } )
-    console.log( productsQuery.data?.data.items )
+    console.log( productsQuery.data?.data.total )
 
     return (
         <Box sx={ { minHeight: '100vh' } } >
@@ -78,14 +81,25 @@ const HomePage = ( props: Props ) =>
                 {
                     productsQuery.data?.data.items.map( ( product, index ) => (
                         <Grid key={ index } size={ { xs: 12, sm: 6, md: 4, lg: 3 } }>
-                            <ProductCard product={ product } />
+                            {
+                                productsQuery.isLoading ?
+                                    <Skeleton variant="rounded" width={ '100%' } height={ 430 } />
+                                    :
+                                    <ProductCard product={ product } />
+                            }
                         </Grid>
                     ) )
                 }
             </Grid>
-            <Box sx={ { display: 'flex', justifyContent: 'center', mt: 4 } }>
-                <Pagination totalPage={ productsQuery.data?.data.totalPages! } page={ page } handleChangePage={ handleChange } />
-            </Box>
+            {
+                productsQuery.data?.data.total === 0 ?
+                    <Typography variant='h4' align='center'>No products found</Typography>
+                    :
+                    <Box sx={ { display: 'flex', justifyContent: 'center', mt: 4 } }>
+                        <Pagination totalPage={ productsQuery.data?.data.totalPages! } page={ page } handleChangePage={ handleChange } />
+                    </Box>
+            }
+
         </Box>
     )
 }

@@ -49,17 +49,20 @@ const request = axios.create({
 });
 
 request.interceptors.request.use((options) => {
-  const { method } = options;
+  const { method, data } = options;
 
-  if (
-    method === "put" ||
-    method === "post" ||
-    method === "get" ||
-    method === "patch"
-  ) {
-    Object.assign(options.headers!, {
-      "Content-Type": "application/json;charset=UTF-8",
-    });
+  if (method === "put" || method === "post" || method === "patch") {
+    if (data instanceof FormData) {
+      // Nếu body là FormData, đặt Content-Type là multipart/form-data
+      Object.assign(options.headers!, {
+        "Content-Type": "multipart/form-data",
+      });
+    } else {
+      // Nếu không, giữ Content-Type là application/json
+      Object.assign(options.headers!, {
+        "Content-Type": "application/json;charset=UTF-8",
+      });
+    }
   }
 
   return options;

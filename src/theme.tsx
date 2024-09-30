@@ -15,7 +15,7 @@ const theme = createTheme( {
         },
     },
     typography: {
-        fontFamily: 'Roboto, sans-serif',
+        fontFamily: 'Kanit, sans-serif',
     }
 } );
 

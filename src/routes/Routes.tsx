@@ -4,7 +4,7 @@ import MainLayout from "../layouts/main/MainLayout";
 import AboutPage from "../pages/about/AboutPage";
 import HomePage from "../pages/home/HomePage";
 import ProfilePage from "../pages/profile/ProfilePage";
-import LoginPage from "../pages/login/LoginPage";
+import LoginPage from "../pages/auth/LoginPage";
 export const router = createBrowserRouter( [
     {
         path: "/",
