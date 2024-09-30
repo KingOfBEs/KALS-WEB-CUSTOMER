@@ -7,6 +7,4 @@ export const FOOTER = {
 
 export const NAVBAR = {};
 
-export const getBaseUrl = (): string => {
-  return import.meta.env.VITE_API_BASE_URL;
-};
+export const HOST_API = import.meta.env.VITE_API_BASE_URL || "";

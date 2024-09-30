@@ -13,18 +13,18 @@ const MainFooter = ( props: Props ) =>
   return (
     <Box sx={ {
       bgcolor: '#00416c',
-      height: FOOTER.MAIN_DESKTOP_HEIGHT,
+      minHeight: FOOTER.MAIN_DESKTOP_HEIGHT,
     } }>
-      <Grid container spacing={ 10 } sx={ {
-        marginX: 15,
+      <Grid container spacing={ { xs: 2, sm: 3, md: 10 } } sx={ {
+        marginX: { xs: 2, sm: 5, md: 15 },
         paddingTop: 5,
       } }>
-        <Grid size={ 4 }>
+        <Grid size={ { xs: 12, md: 4 } }>
           <Typography variant='h6' color='white' > <span style={ { color: '#fed103' } }>Join our community</span> of builders, hackers, and thinkers! You’ll be the first to know about new videos, products, and deals - don’t miss out.</Typography>
           <input type='text' placeholder='Enter your email' style={ { width: '50%', height: 50, marginTop: 10, borderRadius: 5, padding: 10 } } />
         </Grid>
-        <Grid container size={ 8 }>
-          <Grid size={ 4 }>
+        <Grid container size={ { xs: 12, md: 8 } }>
+          <Grid size={ { xs: 6, md: 4 } }>
             <Stack spacing={ 2 }>
               <Typography variant='h6' color='white' >Contact us</Typography>
               <Typography variant='body2' color='white' sx={ {
@@ -46,7 +46,7 @@ const MainFooter = ( props: Props ) =>
               <Typography variant='body2' color='white' >Press</Typography>
             </Stack>
           </Grid>
-          <Grid size={ 4 }>
+          <Grid size={ { xs: 6, md: 4 } }>
             <Stack spacing={ 2 }>
               <Typography variant='h6' color='white' >Products</Typography>
               <Typography variant='body2' color='white' >Build Box</Typography>
@@ -63,14 +63,14 @@ const MainFooter = ( props: Props ) =>
               <Typography variant='body2' color='white' >Sponsor a Future Engineer</Typography>
             </Stack>
           </Grid>
-          <Grid size={ 4 }>
+          <Grid size={ { xs: 6, md: 4 } }>
             <Stack spacing={ 2 }>
               <Typography variant='h6' color='white' >Bonus</Typography>
               <Typography variant='body2' color='white' >Videos</Typography>
               <Typography variant='body2' color='white' >Roblox</Typography>
               <Typography variant='body2' color='white' >International</Typography>
               <Typography variant='body2' color='white' >Camp CrunchLabs</Typography>
-              <Typography variant='h6' color='white' >Contact us</Typography>
+              <Typography variant='h6' color='white' >Legal & Policies</Typography>
               <Typography variant='body2' color='white' >Terms & Conditions</Typography>
               <Typography variant='body2' color='white' >Privacy Notice</Typography>
               <Typography variant='body2' color='white' >Accessibility</Typography>

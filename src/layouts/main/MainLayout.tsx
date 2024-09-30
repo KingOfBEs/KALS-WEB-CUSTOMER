@@ -14,7 +14,12 @@ const MainLayout = ( props: Props ) =>
             <MainHeader />
             <Box sx={ { height: HEADER.MAIN_DESKTOP_HEIGHT } } />
             <Box sx={ {
-                paddingX: 15,
+                marginX: {
+                    xs: 2,
+                    sm: 5,
+                    md: 10,
+                    lg: 15,
+                },
                 paddingTop: 2,
                 paddingBottom: 8,
             } }>
