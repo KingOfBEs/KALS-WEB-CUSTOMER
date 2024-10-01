@@ -1,3 +1,5 @@
+import { CategoryResponse } from "./category.type";
+
 export interface Product {
   id: string;
   name: string;
@@ -8,9 +10,10 @@ export interface Product {
   createdAt: string;
   modifiedAt: string;
   isHidden: boolean;
+  categories: CategoryResponse[];
 }
 
 export type ProductResponse = Pick<
   Product,
-  "id" | "name" | "price" | "isHidden"
+  "id" | "name" | "price" | "isHidden" | "categories"
 >;

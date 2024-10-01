@@ -18,7 +18,7 @@ const ProductCard: React.FC<Props> = ( { product }: Props ) =>
             </Box>
             <Box sx={ { px: 2 } }>
                 <Stack spacing={ 1 }>
-                    <Typography variant='subtitle1'>Merchandise</Typography>
+                    <Typography variant='subtitle1'>{ product.categories ? product.categories.map( c => c.name ).join( "," ) : "Others" }</Typography>
                     <Typography variant='h6'>{ product.name }</Typography>
                     <Typography variant='body1' >${ product.price }</Typography>
                 </Stack>

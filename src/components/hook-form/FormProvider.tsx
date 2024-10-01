@@ -14,7 +14,7 @@ export default function FormProvider ( { children, onSubmit, methods }: Props )
 {
     return (
         <Form { ...methods }>
-            <form onSubmit={ onSubmit }>{ children }</form>
+            <form onSubmit={ onSubmit } noValidate>{ children }</form>
         </Form>
     );
 }

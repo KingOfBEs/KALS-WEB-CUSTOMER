@@ -66,8 +66,6 @@ const CartDrawer: React.FC<Props> = ( { toggleDrawer }: Props ) =>
                             '& .MuiOutlinedInput-root': {
                                 height: '30px', // Adjust the height of the input field
                                 borderRadius: '15px', // Make the corners rounded
-                            },
-                            '& .css-fzxhed-MuiInputBase-root-MuiOutlinedInput-root': {
                                 paddingX: '0px', // Adjust the padding as needed
                             },
                             '& .MuiOutlinedInput-input': {
@@ -126,8 +124,6 @@ const CartDrawer: React.FC<Props> = ( { toggleDrawer }: Props ) =>
                             '& .MuiOutlinedInput-root': {
                                 height: '30px', // Adjust the height of the input field
                                 borderRadius: '15px', // Make the corners rounded
-                            },
-                            '& .css-fzxhed-MuiInputBase-root-MuiOutlinedInput-root': {
                                 paddingX: '0px', // Adjust the padding as needed
                             },
                             '& .MuiOutlinedInput-input': {

@@ -13,6 +13,7 @@ import { Fragment, useState } from 'react';
 import MenuIcon from '@mui/icons-material/Menu';
 import CartDrawer from '../../../components/Drawer/CartDrawer/CartDrawer';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../../contexts/useAuth';
 
 const StyledBadge = styled( Badge )<BadgeProps>( ( { theme } ) => ( {
   '& .MuiBadge-badge': {
@@ -27,6 +28,7 @@ type Props = {}
 
 const MainHeader = ( props: Props ) =>
 {
+  const { isLoggedIn } = useAuth();
   const [ drawerMenuOpen, setDrawerMenuOpen ] = useState( false );
   const [ drawerCartOpen, setDrawerCartOpen ] = useState( false );
   const theme = useTheme();
@@ -112,7 +114,7 @@ const MainHeader = ( props: Props ) =>
           justifyContent: 'flex-end',
           alignItems: 'center',
         } }>
-          <Link to="/login" style={ { textDecoration: 'none' } }>
+          <Link to={ isLoggedIn() ? '/profile' : '/login' } style={ { textDecoration: 'none' } }>
             <IconButton aria-label="account">
               <AccountCircleIcon />
             </IconButton>

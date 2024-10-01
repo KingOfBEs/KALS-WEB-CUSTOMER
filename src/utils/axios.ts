@@ -1,5 +1,46 @@
 import axios from "axios";
 import { HOST_API } from "./config";
+import { BaseError } from "../types/response.type";
+import { toast } from "react-toastify";
+
+export const handleError = (error: any): BaseError => {
+  let handledError: BaseError;
+
+  if (error.response) {
+    const { status, data } = error.response;
+
+    if (data && data.StatusCode && data.Error && data.TimeStamp) {
+      handledError = {
+        StatusCode: data.StatusCode,
+        Error: data.Error,
+        TimeStamp: data.TimeStamp,
+      };
+    } else {
+      handledError = {
+        StatusCode: status,
+        Error: "An unexpected error occurred.",
+        TimeStamp: new Date().toISOString(),
+      };
+    }
+  } else if (error.request) {
+    handledError = {
+      StatusCode: 0,
+      Error: "Network error: No response received.",
+      TimeStamp: new Date().toISOString(),
+    };
+  } else {
+    handledError = {
+      StatusCode: 0,
+      Error: "An error occurred while setting up the request.",
+      TimeStamp: new Date().toISOString(),
+    };
+  }
+
+  // Show toast notification with the error message
+  toast.error(handledError.Error);
+
+  return handledError;
+};
 
 export const axiosInstance = axios.create({
   baseURL: HOST_API,
@@ -7,10 +48,10 @@ export const axiosInstance = axios.create({
 
 axiosInstance.interceptors.response.use(
   (response) => response,
-  (error) =>
-    Promise.reject(
-      (error.response && error.response.data) || "Something went wrong"
-    )
+  (error) => {
+    const handledError = handleError(error);
+    return Promise.reject(handledError);
+  }
 );
 
 const parseParams = (params: any) => {
@@ -70,8 +111,10 @@ request.interceptors.request.use((options) => {
 
 request.interceptors.response.use(
   (response) => response,
-  (error) =>
-    Promise.reject((error.response && error.response.data) || "Có lỗi xảy ra")
+  (error) => {
+    const handledError = handleError(error);
+    return Promise.reject(handledError);
+  }
 );
 
 export default request;

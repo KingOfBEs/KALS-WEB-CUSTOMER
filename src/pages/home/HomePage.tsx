@@ -23,6 +23,7 @@ const HomePage = ( props: Props ) =>
     const [ page, setPage ] = useState( 1 );
     const [ currentSearch, setCurrentSearch ] = useState( '' )
     const [ search, setSearch ] = useState( '' )
+    const [ categoryIds, setCategoryIds ] = useState<string[]>( [] )
     const handleChange = ( event: React.ChangeEvent<unknown>, value: number ) =>
     {
         setPage( value );
@@ -38,11 +39,11 @@ const HomePage = ( props: Props ) =>
     };
 
     const productsQuery = useQuery( {
-        queryKey: [ 'products', { page, search } ],
-        queryFn: () => productApi.getProducts( { page, size: 8, Name: search } ),
+        queryKey: [ 'products', { page, search, categoryIds } ],
+        queryFn: () => productApi.getProducts( { page, size: 8, Name: search, CategoryIds: categoryIds } ),
         placeholderData: keepPreviousData
     } )
-    console.log( productsQuery.data?.data.total )
+    // console.log( productsQuery.data?.data.total )
 
     return (
         <Box sx={ { minHeight: '100vh' } } >
@@ -73,7 +74,7 @@ const HomePage = ( props: Props ) =>
                 />
                 <Button onClick={ toggleDrawer( true ) } sx={ { py: 1, px: 2 } } variant='outlined' color='primary' endIcon={ <TuneIcon /> }>Filter</Button>
                 <Drawer anchor={ 'right' } open={ open } onClose={ toggleDrawer( false ) }>
-                    <FilterDrawer toggleDrawer={ toggleDrawer } />
+                    <FilterDrawer categoryIds={ categoryIds } setCategoryIds={ setCategoryIds } toggleDrawer={ toggleDrawer } />
                 </Drawer>
             </Box>
 
@@ -81,16 +82,25 @@ const HomePage = ( props: Props ) =>
                 {
                     productsQuery.data?.data.items.map( ( product, index ) => (
                         <Grid key={ index } size={ { xs: 12, sm: 6, md: 4, lg: 3 } }>
-                            {
-                                productsQuery.isLoading ?
-                                    <Skeleton variant="rounded" width={ '100%' } height={ 430 } />
-                                    :
-                                    <ProductCard product={ product } />
-                            }
+                            <ProductCard product={ product } />
                         </Grid>
                     ) )
                 }
+
             </Grid>
+            {
+                productsQuery.isLoading &&
+                <Grid container spacing={ { xs: 2, sm: 3, md: 4 } }>
+                    {
+                        Array.from( { length: 4 } ).map( ( _, index ) => (
+                            <Grid key={ index } size={ { xs: 12, sm: 6, md: 4, lg: 3 } }>
+                                <Skeleton variant="rounded" width={ '100%' } height={ 430 } />
+                            </Grid>
+                        ) )
+                    }
+                </Grid>
+
+            }
             {
                 productsQuery.data?.data.total === 0 ?
                     <Typography variant='h4' align='center'>No products found</Typography>

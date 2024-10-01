@@ -69,3 +69,13 @@ export const normalizeParams = (filters: any) => {
   );
   return removeEmptyValueParams;
 };
+
+export const API_SUFFIX = {
+  PRODUCT_API: "products",
+  CATEGORY_API: "categories",
+  AUTH_API: {
+    LOGIN: "login",
+    REGISTER: "signup",
+    OTP: "otp",
+  },
+};

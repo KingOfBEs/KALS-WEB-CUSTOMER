@@ -10,3 +10,9 @@ export type TRequestPaging = {
   size?: number;
   page?: number;
 };
+
+export type BaseError = {
+  StatusCode: number;
+  Error: string;
+  TimeStamp: string;
+};
