@@ -5,12 +5,12 @@ import Button from "@mui/material/Button"
 import InputAdornment from "@mui/material/InputAdornment"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
+import { toast } from "react-toastify"
 import { z } from "zod"
 import { authApi } from "../../../apis/auth.api"
 import FormProvider from "../../../components/hook-form/FormProvider"
 import RHFTextField from "../../../components/hook-form/RHFTextField"
 import { useAuth } from "../../../contexts/useAuth"
-import { toast } from "react-toastify"
 
 const RegisterSchema = z.object( {
     username: z
@@ -65,6 +65,17 @@ const RegisterForm = ( props: Props ) =>
     }
     const handleSendSMS = async () =>
     {
+        const phoneNumber = methods.getValues( 'phoneNumber' );
+        const phoneNumberValidation = RegisterSchema.shape.phoneNumber.safeParse( phoneNumber );
+
+        if ( !phoneNumberValidation.success )
+        {
+            methods.setError( 'phoneNumber', {
+                type: 'manual',
+                message: phoneNumberValidation.error.errors[ 0 ].message,
+            } );
+            return;
+        }
         setIsSentSMS( true )
         await authApi.sendSMS( methods.getValues( 'phoneNumber' ) )
             .then( res =>
@@ -116,6 +127,7 @@ const RegisterForm = ( props: Props ) =>
                     Create Account
                 </Button>
             </Box>
+
         </FormProvider>
     )
 }
