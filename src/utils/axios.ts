@@ -1,11 +1,10 @@
 import axios from "axios";
-import { HOST_API } from "./config";
-import { BaseError } from "../types/response.type";
 import { toast } from "react-toastify";
+import { BaseError } from "../types/response.type";
+import { HOST_API } from "./config";
 
 export const handleError = (error: any): BaseError => {
   let handledError: BaseError;
-
   if (error.response) {
     const { status, data } = error.response;
 

@@ -6,11 +6,16 @@ import InputAdornment from "@mui/material/InputAdornment"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { toast } from "react-toastify"
-import { z } from "zod"
+import { string, z } from "zod"
 import { authApi } from "../../../apis/auth.api"
 import FormProvider from "../../../components/hook-form/FormProvider"
 import RHFTextField from "../../../components/hook-form/RHFTextField"
 import { useAuth } from "../../../contexts/useAuth"
+
+const phoneNumberSchema = z
+    .string()
+    .length( 10, "Phone number must be 10 digits long" )
+    .regex( /^0(9[0-9]|1[0-9]|3[0-9]|4[0-9]|5[0-9]|7[0-9]|8[0-9])\d{7}$/, "Invalid phone number" );
 
 const RegisterSchema = z.object( {
     username: z
@@ -24,19 +29,20 @@ const RegisterSchema = z.object( {
         .regex( /[a-zA-Z]/, "Password must contain at least one letter" )
         .regex( /[0-9]/, "Password must contain at least one number" )
         .regex( /[!@#$%^&*]/, "Password must contain at least one special character" ),
+    confirmPassword: z.string(),
     fullName: z
         .string()
         .min( 1, "Full name is required" )
         .max( 50, "Full name cannot exceed 50 characters" ),
-    phoneNumber: z
-        .string()
-        .length( 10, "Phone number must be 10 digits long" )
-        .regex( /^0(9[0-9]|1[0-9]|3[0-9]|4[0-9]|5[0-9]|7[0-9]|8[0-9])\d{7}$/, "Invalid phone number" ),
+    phoneNumber: phoneNumberSchema,
     otp: z
         .string()
         .length( 6, "OTP must be exactly 6 characters" )
         .regex( /^\d+$/, "OTP must contain only digits" ),
-} )
+} ).refine( ( data ) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: [ "confirmPassword" ]
+} );
 export type RegisterValues = z.infer<typeof RegisterSchema>
 
 type Props = {}
@@ -51,6 +57,7 @@ const RegisterForm = ( props: Props ) =>
         defaultValues: {
             username: '',
             password: '',
+            confirmPassword: '',
             fullName: '',
             phoneNumber: '',
             otp: ''
@@ -61,12 +68,13 @@ const RegisterForm = ( props: Props ) =>
     } = methods
     const handleRegister = async ( data: RegisterValues ) =>
     {
-        register( data )
+        const { confirmPassword, ...registerData } = data;
+        register( registerData );
     }
     const handleSendSMS = async () =>
     {
         const phoneNumber = methods.getValues( 'phoneNumber' );
-        const phoneNumberValidation = RegisterSchema.shape.phoneNumber.safeParse( phoneNumber );
+        const phoneNumberValidation = phoneNumberSchema.safeParse( phoneNumber );
 
         if ( !phoneNumberValidation.success )
         {
@@ -110,6 +118,7 @@ const RegisterForm = ( props: Props ) =>
             >
                 <RHFTextField name='username' label='Username' required />
                 <RHFTextField name='password' label='Password' type='password' required />
+                <RHFTextField name='confirmPassword' label='Confirm Password' type='password' required />
                 <RHFTextField name='fullName' label='Full Name' required />
                 <RHFTextField name='phoneNumber' label='Phone Number' required
                     slotProps={ {

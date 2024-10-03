@@ -1,19 +1,19 @@
-import { HEADER } from '../../../utils/config'
-import Badge from '@mui/material/Badge';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import MenuIcon from '@mui/icons-material/Menu';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { Drawer, List, ListItem, ListItemButton, ListItemText, useMediaQuery, useTheme } from '@mui/material';
+import Badge, { BadgeProps } from '@mui/material/Badge';
 import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid2';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import styled from '@mui/material/styles/styled';
-import { BadgeProps } from '@mui/material/Badge';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import Grid from '@mui/material/Grid2';
-import { Drawer, List, ListItem, ListItemButton, ListItemIcon, ListItemText, useMediaQuery, useTheme } from '@mui/material';
 import { Fragment, useState } from 'react';
-import MenuIcon from '@mui/icons-material/Menu';
-import CartDrawer from '../../../components/Drawer/CartDrawer/CartDrawer';
 import { Link } from 'react-router-dom';
+import CartDrawer from '../../../components/Drawer/CartDrawer/CartDrawer';
 import { useAuth } from '../../../contexts/useAuth';
+import { useCart } from '../../../contexts/useCart';
+import { HEADER } from '../../../utils/config';
 
 const StyledBadge = styled( Badge )<BadgeProps>( ( { theme } ) => ( {
   '& .MuiBadge-badge': {
@@ -29,19 +29,14 @@ type Props = {}
 const MainHeader = ( props: Props ) =>
 {
   const { isLoggedIn } = useAuth();
+  const { isCartDrawerOpen, toggleCartDrawer } = useCart();
   const [ drawerMenuOpen, setDrawerMenuOpen ] = useState( false );
-  const [ drawerCartOpen, setDrawerCartOpen ] = useState( false );
   const theme = useTheme();
   const isSmallScreen = useMediaQuery( theme.breakpoints.down( 'lg' ) );
 
   const toggleMenuDrawer = ( open: boolean ) => () =>
   {
     setDrawerMenuOpen( open );
-  };
-
-  const toggleCartDrawer = ( open: boolean ) => () =>
-  {
-    setDrawerCartOpen( open );
   };
 
 
@@ -107,7 +102,9 @@ const MainHeader = ( props: Props ) =>
           justifyContent: 'center',
           alignItems: 'center',
         } }>
-          <img src="https://www.crunchlabs.com/cdn/shop/files/dark-logo.svg?v=1676481560&width=500" />
+          <Link to={ '/' } style={ { textDecoration: 'none', marginTop: "8px" } }>
+            <img src="https://www.crunchlabs.com/cdn/shop/files/dark-logo.svg?v=1676481560&width=500" />
+          </Link>
         </Grid>
         <Grid size="grow" sx={ {
           display: 'flex',
@@ -137,7 +134,7 @@ const MainHeader = ( props: Props ) =>
           ) ) }
         </List>
       </Drawer>
-      <Drawer anchor="right" open={ drawerCartOpen } onClose={ toggleCartDrawer( false ) }>
+      <Drawer anchor="right" open={ isCartDrawerOpen } onClose={ toggleCartDrawer( false ) }>
         <CartDrawer toggleDrawer={ toggleCartDrawer } />
       </Drawer>
     </Box>

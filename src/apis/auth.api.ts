@@ -7,7 +7,7 @@ import { API_SUFFIX, generateAPI } from "./utils.api";
 export const authApi = {
   login: (data: LoginValues) =>
     axiosInstance.post<LoginUserResponse>(`${API_SUFFIX.AUTH_API.LOGIN}`, data),
-  register: (data: RegisterValues) =>
+  register: (data: Omit<RegisterValues, "confirmPassword">) =>
     axiosInstance.post<RegisterUserResponse>(
       `${API_SUFFIX.AUTH_API.REGISTER}`,
       data

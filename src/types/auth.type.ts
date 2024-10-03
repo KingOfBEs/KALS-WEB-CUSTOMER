@@ -1,6 +1,6 @@
 export interface LoginUser {
   id: string;
-  userName: string;
+  username: string;
   phoneNumber: string;
   fullName: string;
   token: string;
@@ -9,3 +9,4 @@ export interface LoginUser {
 
 export type LoginUserResponse = Omit<LoginUser, "id">;
 export type RegisterUserResponse = LoginUserResponse;
+export type UserProfile = Omit<LoginUser, "token" | "refreshToken" | "id">;

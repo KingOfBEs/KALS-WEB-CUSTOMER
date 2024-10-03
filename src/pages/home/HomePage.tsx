@@ -1,29 +1,53 @@
 import SearchIcon from '@mui/icons-material/Search'
 import TuneIcon from '@mui/icons-material/Tune'
+import { FormControl, MenuItem, OutlinedInput, Select, SelectChangeEvent } from '@mui/material'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Drawer from '@mui/material/Drawer'
 import Grid from '@mui/material/Grid2'
 import IconButton from '@mui/material/IconButton'
 import InputAdornment from '@mui/material/InputAdornment'
+import Skeleton from '@mui/material/Skeleton'
 import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
 import productApi from '../../apis/product.api'
 import FilterDrawer from '../../components/Drawer/FilterDrawer/FilterDrawer'
 import Pagination from '../../components/Pagination/Pagination'
 import ProductCard from '../../components/ProductCard/ProductCard'
-import Skeleton from '@mui/material/Skeleton'
-import Typography from '@mui/material/Typography'
+import { map } from 'zod'
+
+const sortOption = {
+    NAME_ASC: { label: 'Name (A-Z)', value: "name,true" },
+    NAME_DESC: { label: 'Name (Z-A)', value: "name,false" },
+    PRICE_ASC: { label: 'Price (Low to High)', value: "price,true" },
+    PRICE_DESC: { label: 'Price (High to Low)', value: "price,false" },
+    CREATED_AT_ASC: { label: 'Date (Oldest)', value: "createdAt,true" },
+    CREATED_AT_DESC: { label: 'Date (Newest)', value: "createdAt,false" },
+};
+
 
 type Props = {}
 
 const HomePage = ( props: Props ) =>
 {
+    const [ sort, setSort ] = useState( sortOption.NAME_ASC.value )
     const [ page, setPage ] = useState( 1 );
     const [ currentSearch, setCurrentSearch ] = useState( '' )
     const [ search, setSearch ] = useState( '' )
     const [ categoryIds, setCategoryIds ] = useState<string[]>( [] )
+    const [ sortBy, setSortBy ] = useState( sort.split( ',' )[ 0 ] )
+    const [ isAsc, setIsAsc ] = useState( sort.split( ',' )[ 1 ] )
+
+
+    const handleChangeSort = ( event: SelectChangeEvent ) =>
+    {
+        setSortBy( ( event.target.value as string ).split( ',' )[ 0 ] );  // Update the sort state with the selected option's value
+        setIsAsc( ( event.target.value as string ).split( ',' )[ 1 ] );
+        setSort( event.target.value as string );  // Update the sort state with the selected option's value
+    };
+
     const handleChange = ( event: React.ChangeEvent<unknown>, value: number ) =>
     {
         setPage( value );
@@ -35,15 +59,23 @@ const HomePage = ( props: Props ) =>
     }
     const toggleDrawer = ( newOpen: boolean ) => () =>
     {
+
         setOpen( newOpen );
     };
 
-    const productsQuery = useQuery( {
-        queryKey: [ 'products', { page, search, categoryIds } ],
-        queryFn: () => productApi.getProducts( { page, size: 8, Name: search, CategoryIds: categoryIds } ),
-        placeholderData: keepPreviousData
+    const { data: response, isLoading } = useQuery( {
+        queryKey: [ 'products', { page, search, categoryIds, sortBy, isAsc } ],
+        queryFn: () => productApi.getProducts( {
+            page,
+            size: 8,
+            Name: search,
+            CategoryIds: categoryIds,
+            sortBy: sortBy,
+            isAsc: isAsc
+        } ),
+        placeholderData: keepPreviousData,
+        select: ( data ) => data.data
     } )
-    // console.log( productsQuery.data?.data.total )
 
     return (
         <Box sx={ { minHeight: '100vh' } } >
@@ -73,6 +105,32 @@ const HomePage = ( props: Props ) =>
                     } }
                 />
                 <Button onClick={ toggleDrawer( true ) } sx={ { py: 1, px: 2 } } variant='outlined' color='primary' endIcon={ <TuneIcon /> }>Filter</Button>
+                <FormControl sx={ { minWidth: 180, ml: 2 } }>
+                    <Select
+                        value={ sort }
+                        onChange={ handleChangeSort }
+                        displayEmpty
+                        input={
+                            <OutlinedInput
+                                startAdornment={ <InputAdornment position='start'>Sort by</InputAdornment> }
+                                sx={ {
+                                    '& .MuiOutlinedInput-input': {
+                                        paddingTop: '17px'
+                                    },
+                                } }
+                            />
+                        }
+                        MenuProps={ {
+                            disableScrollLock: true,
+                        } }
+                    >
+                        { Object.keys( sortOption ).map( ( key ) => (
+                            <MenuItem key={ key } value={ sortOption[ key as keyof typeof sortOption ].value }>
+                                { sortOption[ key as keyof typeof sortOption ].label }
+                            </MenuItem>
+                        ) ) }
+                    </Select>
+                </FormControl>
                 <Drawer anchor={ 'right' } open={ open } onClose={ toggleDrawer( false ) }>
                     <FilterDrawer categoryIds={ categoryIds } setCategoryIds={ setCategoryIds } toggleDrawer={ toggleDrawer } />
                 </Drawer>
@@ -80,7 +138,7 @@ const HomePage = ( props: Props ) =>
 
             <Grid container spacing={ { xs: 2, sm: 3, md: 4 } }>
                 {
-                    productsQuery.data?.data.items.map( ( product, index ) => (
+                    response?.items.map( ( product, index ) => (
                         <Grid key={ index } size={ { xs: 12, sm: 6, md: 4, lg: 3 } }>
                             <ProductCard product={ product } />
                         </Grid>
@@ -89,7 +147,7 @@ const HomePage = ( props: Props ) =>
 
             </Grid>
             {
-                productsQuery.isLoading &&
+                isLoading &&
                 <Grid container spacing={ { xs: 2, sm: 3, md: 4 } }>
                     {
                         Array.from( { length: 4 } ).map( ( _, index ) => (
@@ -102,11 +160,11 @@ const HomePage = ( props: Props ) =>
 
             }
             {
-                productsQuery.data?.data.total === 0 ?
+                response?.total === 0 ?
                     <Typography variant='h4' align='center'>No products found</Typography>
                     :
                     <Box sx={ { display: 'flex', justifyContent: 'center', mt: 4 } }>
-                        <Pagination totalPage={ productsQuery.data?.data.totalPages! } page={ page } handleChangePage={ handleChange } />
+                        <Pagination totalPage={ response?.totalPages! } page={ page } handleChangePage={ handleChange } />
                     </Box>
             }
 

@@ -8,13 +8,13 @@ const getProducts = (params?: any) =>
     params,
   });
 
-const getProducById = (id: string) =>
+const getProductById = (id: string) =>
   request.get<ProductResponse>(`/${API_SUFFIX.PRODUCT_API}/${id}`);
 
 const productApi = {
   ...generateAPIWithPaging<ProductResponse>(API_SUFFIX.PRODUCT_API),
   getProducts,
-  getProducById,
+  getProductById,
 };
 
 export default productApi;

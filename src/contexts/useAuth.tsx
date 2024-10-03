@@ -2,13 +2,15 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LoginValues } from "../pages/auth/LoginForm/LoginForm";
 import { RegisterValues } from "../pages/auth/RegisterForm/RegisterForm";
-import { LoginUserResponse } from "../types/auth.type";
+import { LoginUserResponse, UserProfile } from "../types/auth.type";
 import { authApi } from "../apis/auth.api";
 import { toast } from "react-toastify";
+import request from "../utils/axios";
 
 type UserContextType = {
+    user: UserProfile | null;
     login: ( loginValues: LoginValues ) => void;
-    register: ( registerValues: RegisterValues ) => void;
+    register: ( registerValues: Omit<RegisterValues, 'confirmPassword'> ) => void;
     logout: () => void;
     isLoggedIn: () => boolean;
 }
@@ -23,19 +25,35 @@ export const UserProvider: React.FC<AuthProviderProps> = ( { children }: AuthPro
 {
     const navigate = useNavigate();
 
-    const [ user, setUser ] = useState<LoginUserResponse | null>( null );
+    const [ user, setUser ] = useState<UserProfile | null>( null );
     const [ token, setToken ] = useState<string | null>( null );
     const [ isReady, setIsReady ] = useState<boolean>( false );
 
     useEffect( () =>
     {
         const token = localStorage.getItem( 'accessToken' );
+        const user = localStorage.getItem( 'user' );
         if ( token )
         {
             setToken( token );
         }
+        if ( user )
+        {
+            setUser( JSON.parse( user ) )
+        }
         setIsReady( true );
     }, [] )
+
+    useEffect( () =>
+    {
+        if ( token )
+        {
+            request.defaults.headers.Authorization = `Bearer ${ token }`;
+        } else
+        {
+            delete request.defaults.headers.Authorization;
+        }
+    }, [ token ] );
     const login = async ( loginValues: LoginValues ) =>
     {
         await authApi.login( loginValues )
@@ -46,12 +64,19 @@ export const UserProvider: React.FC<AuthProviderProps> = ( { children }: AuthPro
                     setToken( res.data.token );
                     localStorage.setItem( 'accessToken', res.data.token );
                     localStorage.setItem( 'refreshToken', res.data.refreshToken );
+                    const authUser = {
+                        username: res.data.username,
+                        fullName: res.data.fullName,
+                        phoneNumber: res.data.phoneNumber
+                    }
+                    localStorage.setItem( 'user', JSON.stringify( authUser ) );
+                    setUser( authUser );
                     toast.success( 'Login successfully' );
                     navigate( '/' );
                 }
             } )
     }
-    const register = async ( registerValues: RegisterValues ) =>
+    const register = async ( registerValues: Omit<RegisterValues, 'confirmPassword'> ) =>
     {
         await authApi.register( registerValues )
             .then( res =>
@@ -61,6 +86,13 @@ export const UserProvider: React.FC<AuthProviderProps> = ( { children }: AuthPro
                     setToken( res.data.token );
                     localStorage.setItem( 'accessToken', res.data.token );
                     localStorage.setItem( 'refreshToken', res.data.refreshToken );
+                    const authUser = {
+                        username: res.data.username,
+                        fullName: res.data.fullName,
+                        phoneNumber: res.data.phoneNumber
+                    }
+                    localStorage.setItem( 'user', JSON.stringify( authUser ) );
+                    setUser( authUser );
                     toast.success( 'Register successfully' );
                     navigate( '/' );
                 }
@@ -71,11 +103,13 @@ export const UserProvider: React.FC<AuthProviderProps> = ( { children }: AuthPro
         setToken( null );
         localStorage.removeItem( 'accessToken' );
         localStorage.removeItem( 'refreshToken' );
-        navigate( '/auth/login' );
+        localStorage.removeItem( 'user' );
+        toast.success( 'Logout successfully' );
+        navigate( '/login' );
     }
     const isLoggedIn = (): boolean => !!token;
     return (
-        <UserContext.Provider value={ { login, register, logout, isLoggedIn } }>
+        <UserContext.Provider value={ { user, login, register, logout, isLoggedIn } }>
             { isReady && children }
         </UserContext.Provider>
     );

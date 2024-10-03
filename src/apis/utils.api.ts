@@ -32,7 +32,7 @@ export function generateAPI<T>(resource: string): BaseApi<T> {
       }),
     delete: (id) => request.delete<any>(`/${resource}/${id}`),
     create: (data) => request.post<T>(`/${resource}`, data),
-    update: (id, data) => request.put<T>(`/${resource}/${id}`, data),
+    update: (id, data) => request.patch<T>(`/${resource}/${id}`, data),
   };
 }
 
@@ -51,7 +51,7 @@ export function generateAPIWithPaging<
       }),
     delete: (id) => request.delete<any>(`/${resource}/${id}`),
     create: (data) => request.post<BaseReponse<T>>(`/${resource}`, data),
-    update: (id, data) => request.put<T>(`/${resource}/${id}`, data),
+    update: (id, data) => request.patch<T>(`/${resource}/${id}`, data),
   };
 }
 
@@ -78,4 +78,5 @@ export const API_SUFFIX = {
     REGISTER: "signup",
     OTP: "otp",
   },
+  CART_API: "carts",
 };
