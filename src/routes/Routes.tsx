@@ -5,6 +5,7 @@ import AboutPage from "../pages/about/AboutPage";
 import HomePage from "../pages/home/HomePage";
 import ProfilePage from "../pages/profile/ProfilePage";
 import LoginPage from "../pages/auth/LoginPage";
+import ProductDetailPage from "../pages/productDetail/ProductDetailPage";
 export const router = createBrowserRouter( [
     {
         path: "/",
@@ -18,8 +19,7 @@ export const router = createBrowserRouter( [
                     { path: "profile", element: <ProfilePage /> },
                     { path: "about", element: <AboutPage /> },
                     { path: "login", element: <LoginPage /> },
-
-
+                    {  path: "product/:id", element: <ProductDetailPage />}
                 ]
             }
         ]

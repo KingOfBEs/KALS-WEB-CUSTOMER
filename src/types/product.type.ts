@@ -17,3 +17,5 @@ export type ProductResponse = Pick<
   Product,
   "id" | "name" | "price" | "isHidden" | "categories"
 >;
+
+export type ProductDetailResponse = Product;
