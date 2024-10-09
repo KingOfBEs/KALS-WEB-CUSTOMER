@@ -9,6 +9,7 @@ import { cartApi } from '../../apis/cart.api'
 import { CartItemRequest } from '../../types/cart.type'
 import { useAuth } from '../../contexts/useAuth'
 import { useNavigate } from 'react-router-dom'
+import ProductDetailPage from '../../pages/productDetail/ProductDetailPage'
 import { toast } from 'react-toastify'
 
 interface Props
@@ -49,10 +50,10 @@ const ProductCard: React.FC<Props> = ( { product }: Props ) =>
   
     return (
         <Box
-            onClick={handleCardClick} 
+         
             sx={{ border: 2, height: 430, width: '100%', borderRadius: 2, cursor: 'pointer' }}
         >
-            <Box sx={{ pt: 1 }}>
+            <Box sx={{ pt: 1 }}    onClick={handleCardClick} >
                 <img
                     style={{ objectFit: 'cover' }}
                     height={220}

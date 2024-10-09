@@ -16,6 +16,7 @@ import productApi from '../../apis/product.api'
 import FilterDrawer from '../../components/Drawer/FilterDrawer/FilterDrawer'
 import Pagination from '../../components/Pagination/Pagination'
 import ProductCard from '../../components/ProductCard/ProductCard'
+import ProductDetailPage from '../productDetail/ProductDetailPage'
 import { map } from 'zod'
 
 const sortOption = {
