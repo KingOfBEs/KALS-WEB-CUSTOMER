@@ -80,21 +80,23 @@ const ProductDetailPage = () => {
   return (
     <Box
       sx={{ border: 2, height: 430, width: '100%', borderRadius: 2, cursor: 'pointer' }}
-      onClick={() => navigate(`/product/${productDetail.id}`)} // Navigate to product detail on click
+      onClick={() => navigate(`/product/${productDetail.id}`)}
     >
       <Box sx={{ pt: 1 }}>
         <img
           style={{ objectFit: 'cover' }}
           height={220}
           width={'100%'}
-          src={ 'https://via.placeholder.com/150'}
+          src={'https://www.crunchlabs.com/cdn/shop/files/Untitleddesign_d57d8055-deff-42bd-8b80-8bb47a91ff6d.png?v=1716312776'}
           alt={productDetail.name}
         />
       </Box>
       <Box sx={{ px: 2 }}>
         <Stack spacing={1}>
           <Typography variant='subtitle1'>
-            {productDetail.categories.length > 0 ? productDetail.categories.map((c) => c.name).join(', ') : 'Others'}
+            {productDetail?.categories && productDetail.categories.length > 0 
+              ? productDetail.categories.map(c => c.name).join(', ') 
+              : 'Others'}
           </Typography>
           <Typography variant='h6'>{productDetail.name}</Typography>
           <Typography variant='body1'>${productDetail.price}</Typography>
