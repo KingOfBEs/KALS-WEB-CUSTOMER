@@ -47,10 +47,7 @@ export const axiosInstance = axios.create({
 
 axiosInstance.interceptors.response.use(
   (response) => response,
-  (error) => {
-    const handledError = handleError(error);
-    return Promise.reject(handledError);
-  }
+  (error) => Promise.reject(error)
 );
 
 const parseParams = (params: any) => {
@@ -110,10 +107,7 @@ request.interceptors.request.use((options) => {
 
 request.interceptors.response.use(
   (response) => response,
-  (error) => {
-    const handledError = handleError(error);
-    return Promise.reject(handledError);
-  }
+  (error) => Promise.reject(error)
 );
 
 export default request;

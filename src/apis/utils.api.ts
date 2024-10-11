@@ -77,6 +77,9 @@ export const API_SUFFIX = {
     LOGIN: "login",
     REGISTER: "signup",
     OTP: "otp",
+    FORGET_PASSWORD: "forget-password",
   },
   CART_API: "carts",
+  MEMBER_API: "members",
+  PAYMENT_API: "payments",
 };

@@ -1,6 +1,10 @@
 import { LoginValues } from "../pages/auth/LoginForm/LoginForm";
 import { RegisterValues } from "../pages/auth/RegisterForm/RegisterForm";
-import { LoginUserResponse, RegisterUserResponse } from "../types/auth.type";
+import {
+  LoginUserResponse,
+  RegisterUserResponse,
+  ResetPasswordRequest,
+} from "../types/auth.type";
 import { axiosInstance } from "../utils/axios";
 import { API_SUFFIX, generateAPI } from "./utils.api";
 
@@ -14,4 +18,9 @@ export const authApi = {
     ),
   sendSMS: (phoneNumber: string) =>
     axiosInstance.post(`${API_SUFFIX.AUTH_API.OTP}`, { phoneNumber }),
+  resetPassword: (resetPasswordRequest: ResetPasswordRequest) =>
+    axiosInstance.patch(
+      `${API_SUFFIX.AUTH_API.FORGET_PASSWORD}`,
+      resetPasswordRequest
+    ),
 };

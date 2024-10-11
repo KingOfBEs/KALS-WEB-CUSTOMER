@@ -13,6 +13,7 @@ import { Fragment } from 'react';
 import { cartApi } from '../../../apis/cart.api';
 import { CartItem } from '../../../types/cart.type';
 import CartItemCard from '../../CartItemCard/CartItemCard';
+import { Link } from 'react-router-dom';
 
 
 interface Props
@@ -59,7 +60,7 @@ const CartDrawer: React.FC<Props> = ( { toggleDrawer }: Props ) =>
                 <Typography variant='h6'>Total:</Typography>
                 <Typography variant='h6'>${ !cart?.length ? 0 : cart.reduce( ( total, item ) => total + item.price * item.quantity, 0 ) }</Typography>
             </Box>
-            <Button disabled={ !cart?.length } onClick={ toggleDrawer( false ) } sx={ { mx: 3, mt: 2, height: 40 } } variant='contained' color='primary'>Checkout</Button>
+            <Button component={ Link } to={ 'checkout/information' } disabled={ !cart?.length } onClick={ toggleDrawer( false ) } sx={ { mx: 3, mt: 2, height: 40 } } variant='contained' color='primary'>Checkout</Button>
         </Box>
     )
 }

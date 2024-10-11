@@ -2,15 +2,16 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LoginValues } from "../pages/auth/LoginForm/LoginForm";
 import { RegisterValues } from "../pages/auth/RegisterForm/RegisterForm";
-import { LoginUserResponse, UserProfile } from "../types/auth.type";
+import { LoginUserResponse, ResetPasswordRequest, UserProfile } from "../types/auth.type";
 import { authApi } from "../apis/auth.api";
 import { toast } from "react-toastify";
-import request from "../utils/axios";
+import request, { handleError } from "../utils/axios";
 
 type UserContextType = {
     user: UserProfile | null;
     login: ( loginValues: LoginValues ) => void;
     register: ( registerValues: Omit<RegisterValues, 'confirmPassword'> ) => void;
+    // resetPassword: ( resetPasswordRequest: ResetPasswordRequest ) => void;
     logout: () => void;
     isLoggedIn: () => boolean;
 }
@@ -75,6 +76,10 @@ export const UserProvider: React.FC<AuthProviderProps> = ( { children }: AuthPro
                     navigate( '/' );
                 }
             } )
+            .catch( err =>
+            {
+                handleError( err );
+            } )
     }
     const register = async ( registerValues: Omit<RegisterValues, 'confirmPassword'> ) =>
     {
@@ -97,7 +102,21 @@ export const UserProvider: React.FC<AuthProviderProps> = ( { children }: AuthPro
                     navigate( '/' );
                 }
             } )
+            .catch( err =>
+            {
+                handleError( err );
+            } )
     }
+    // const resetPassword = async ( resetPasswordRequest: ResetPasswordRequest ) => {
+    //     await authApi.resetPassword( resetPasswordRequest )
+    //     .then ( res => {
+    //         if ( res.status === 200 )
+    //         {
+
+    //             toast.success( 'Reset password successfully' )
+    //         }
+    //     })
+    // }
     const logout = () =>
     {
         setToken( null );

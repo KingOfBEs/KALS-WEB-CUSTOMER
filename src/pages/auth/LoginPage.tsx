@@ -44,7 +44,17 @@ const LoginPage = ( props: Props ) =>
     const [ isLogin, setIsLogin ] = useState( true );
     const [ isForgotPassword, setIsForgotPassword ] = useState( false );
     return (
-        <Box sx={ { minHeight: '100vh' } }>
+        <Box sx={ {
+            minHeight: '100vh',
+            marginX: {
+                xs: 2,
+                sm: 5,
+                md: 10,
+                lg: 15,
+            },
+            paddingTop: 2,
+            paddingBottom: 8,
+        } }>
             <Box sx={ { display: 'flex', gap: 3, justifyContent: 'center', pt: 2, pb: 6 } }>
                 <Button variant={ isLogin ? 'contained' : 'outlined' } color='primary' sx={ { borderRadius: 5, px: 3, py: 1 } } onClick={ () => { setIsLogin( true ) } }>Login</Button>
                 <Button variant={ isLogin ? 'outlined' : 'contained' } color='primary' sx={ { borderRadius: 5, py: 1 } } onClick={ () => { setIsLogin( false ); setIsForgotPassword( false ) } }>Create Account</Button>

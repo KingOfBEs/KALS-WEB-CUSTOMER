@@ -15,6 +15,7 @@ import { useState } from 'react';
 interface Props
 {
     phoneNumber: string
+    handleChangeFormLogin: () => void;
 }
 export const ResetPasswordSchema = z.object( {
     otp: z
@@ -36,7 +37,7 @@ export const ResetPasswordSchema = z.object( {
 
 export type ResetPasswordValues = z.infer<typeof ResetPasswordSchema>
 
-const ResetPasswordForm: React.FC<Props> = ( { phoneNumber } ) =>
+const ResetPasswordForm: React.FC<Props> = ( { phoneNumber, handleChangeFormLogin } ) =>
 {
     const [ isSentSMS, setIsSentSMS ] = useState( false )
     const [ isButtonDisabled, setIsButtonDisabled ] = useState( false )
@@ -54,8 +55,15 @@ const ResetPasswordForm: React.FC<Props> = ( { phoneNumber } ) =>
 
     const handleResetPassword = async ( data: ResetPasswordValues ) =>
     {
-        // Implement send SMS here
-        console.log( data )
+        await authApi.resetPassword( { phoneNumber, otp: data.otp, password: data.password } )
+            .then( res =>
+            {
+                if ( res.status === 200 )
+                {
+                    toast.success( 'Reset password successfully' );
+                    handleChangeFormLogin();
+                }
+            } )
     }
     const handleSendSMS = async () =>
     {

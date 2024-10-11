@@ -7,13 +7,14 @@ import { useAuth } from '../../contexts/useAuth'
 import { useTheme } from '@mui/material'
 import Stack from '@mui/material/Stack'
 import Button from '@mui/material/Button'
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
+import AddressInformation from './address-information/AddressInformation';
 
 const option = {
-    LAB_WAREHOUSE: 'Lab Warehouse',
+    SHIPPING_ADDRESS: 'Shipping Address',
     ORDER_MANAGEMENT: 'Order Management',
     SUPPORT_REQUEST: 'Support Request',
-    ORDER_HISTORY: 'Order History'
+    LABS_WAREHOUSE: 'Labs Warehouse'
 }
 
 type Props = {}
@@ -22,7 +23,7 @@ const ProfilePage = ( props: Props ) =>
 {
     const theme = useTheme()
     const { user, logout } = useAuth()
-    const [ choose, setChoose ] = useState( option.LAB_WAREHOUSE );
+    const [ choose, setChoose ] = useState( option.SHIPPING_ADDRESS );
 
     const handleChangeOption = ( selectedOption: keyof typeof option ) =>
     {
@@ -32,7 +33,14 @@ const ProfilePage = ( props: Props ) =>
     return (
         <Box sx={ {
             minHeight: '100vh',
-            bgcolor: 'background.default'
+            marginX: {
+                xs: 2,
+                sm: 5,
+                md: 10,
+                lg: 15,
+            },
+            paddingTop: 2,
+            paddingBottom: 8,
         } }>
             <Grid container spacing={ 4 }>
                 <Grid size={ 3 } sx={ { height: '100vh' } }>
@@ -67,15 +75,15 @@ const ProfilePage = ( props: Props ) =>
                         <Typography variant='subtitle1' sx={ { textDecorationLine: 'underline', ":hover": { cursor: 'pointer' } } } onClick={ logout } >Logout</Typography>
                     </Box>
                     <Stack spacing={ 4 } sx={ { mt: 4 } }>
-                        <Button onClick={ () => handleChangeOption( 'LAB_WAREHOUSE' ) } sx={ { width: '100%', height: 40, borderRadius: 0 } } variant={ choose === option.LAB_WAREHOUSE ? 'contained' : 'text' }>Lab Warehouse</Button>
+                        <Button onClick={ () => handleChangeOption( 'SHIPPING_ADDRESS' ) } sx={ { width: '100%', height: 40, borderRadius: 0 } } variant={ choose === option.SHIPPING_ADDRESS ? 'contained' : 'text' }>Shipping Address</Button>
                         <Button onClick={ () => handleChangeOption( 'ORDER_MANAGEMENT' ) } sx={ { width: '100%', height: 40, borderRadius: 0 } } variant={ choose === option.ORDER_MANAGEMENT ? 'contained' : 'text' }>Order Management</Button>
                         <Button onClick={ () => handleChangeOption( 'SUPPORT_REQUEST' ) } sx={ { width: '100%', height: 40, borderRadius: 0 } } variant={ choose === option.SUPPORT_REQUEST ? 'contained' : 'text' }>Support Request</Button>
-                        <Button onClick={ () => handleChangeOption( 'ORDER_HISTORY' ) } sx={ { width: '100%', height: 40, borderRadius: 0 } } variant={ choose === option.ORDER_HISTORY ? 'contained' : 'text' }>Order History</Button>
+                        <Button onClick={ () => handleChangeOption( 'LABS_WAREHOUSE' ) } sx={ { width: '100%', height: 40, borderRadius: 0 } } variant={ choose === option.LABS_WAREHOUSE ? 'contained' : 'text' }>Labs Warehouse</Button>
                     </Stack>
                 </Grid>
                 <Grid size={ 9 } >
                     {
-                        choose === option.LAB_WAREHOUSE && <Typography>Lab Warehouse</Typography>
+                        choose === option.SHIPPING_ADDRESS && <AddressInformation />
                     }
                     {
                         choose === option.ORDER_MANAGEMENT && <Typography>Order Management</Typography>
@@ -84,7 +92,7 @@ const ProfilePage = ( props: Props ) =>
                         choose === option.SUPPORT_REQUEST && <Typography>Support Request</Typography>
                     }
                     {
-                        choose === option.ORDER_HISTORY && <Typography>Order History</Typography>
+                        choose === option.LABS_WAREHOUSE && <Typography>Labs Warehouse</Typography>
                     }
                 </Grid>
             </Grid>

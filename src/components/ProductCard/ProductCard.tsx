@@ -20,10 +20,6 @@ const ProductCard: React.FC<Props> = ( { product }: Props ) =>
 {
     const { isLoggedIn } = useAuth();
     const navigate = useNavigate();
-    const { toggleCartDrawer } = useCart();
-    const { mutateAsync, isSuccess } = useMutation( {
-        mutationFn: ( data: CartItemRequest ) => cartApi.create( data )
-    } )
 
     const handleAddToCart = async ( event: React.MouseEvent | React.KeyboardEvent ) =>
     {
@@ -39,7 +35,6 @@ const ProductCard: React.FC<Props> = ( { product }: Props ) =>
                 if ( res.status === 200 )
                 {
                     toast.success( 'Product added to cart' )
-                    toggleCartDrawer( true )( event )
                 }
             } )
     }

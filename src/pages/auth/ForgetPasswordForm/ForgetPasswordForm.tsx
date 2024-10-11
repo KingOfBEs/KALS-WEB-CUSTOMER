@@ -11,6 +11,8 @@ import { useState } from "react"
 import InputAdornment from "@mui/material/InputAdornment"
 import LoadingButton from '@mui/lab/LoadingButton'
 import ResetPasswordForm from "../ResetPasswordForm/ResetPasswordForm"
+import { authApi } from "../../../apis/auth.api"
+import { toast } from "react-toastify"
 
 export const ForgotPasswordSchema = z.object( {
     phoneNumber: z
@@ -42,14 +44,26 @@ const ForgetPasswordForm: React.FC<Props> = ( { handleChangeFormLogin }: Props )
 
     const handleSendSMS = async ( data: ForgotPasswordValues ) =>
     {
-        setIsSendSMS( true )
+        await authApi.sendSMS( data.phoneNumber )
+            .then( ( res ) =>
+            {
+                if ( res.status === 200 )
+                {
+                    toast.success( 'Send OTP successfully' )
+                    setIsSendSMS( true )
+                }
+            } )
+            .catch( ( err ) =>
+            {
+                toast.error( 'Send OTP failed' )
+            } )
     }
 
     return (
         <Fragment>
             {
                 isSendSMS ? (
-                    <ResetPasswordForm phoneNumber={ methods.getValues( 'phoneNumber' ) } />
+                    <ResetPasswordForm handleChangeFormLogin={ handleChangeFormLogin } phoneNumber={ methods.getValues( 'phoneNumber' ) } />
                 ) : (
                     <FormProvider onSubmit={ handleSubmit( handleSendSMS ) } methods={ methods } >
                         <Box sx={ {

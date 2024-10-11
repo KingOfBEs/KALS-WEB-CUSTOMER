@@ -88,10 +88,14 @@ const MainHeader = ( props: Props ) =>
                   </Link>
                 </Grid>
                 <Grid size={ 3 }>
-                  <Typography variant="h6" sx={ { flexGrow: 1 } }>Shop</Typography>
+                  <Link to={ '/shop' } style={ { textDecoration: 'none', color: 'black' } }>
+                    <Typography variant="h6" sx={ { flexGrow: 1 } }>Shop</Typography>
+                  </Link>
                 </Grid>
                 <Grid size={ 6 }>
-                  <Typography variant="h6" sx={ { flexGrow: 1 } }>About us</Typography>
+                  <Link to={ '/about' } style={ { textDecoration: 'none', color: 'black' } }>
+                    <Typography variant="h6" sx={ { flexGrow: 1 } }>About us</Typography>
+                  </Link>
                 </Grid>
               </Fragment>
             )
